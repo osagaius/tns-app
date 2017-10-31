@@ -60,6 +60,11 @@ export default class App extends Component {
       Firebase.auth().signInWithEmailAndPassword(email, password)
         .catch(() => {
           Firebase.auth().createUserWithEmailAndPassword(email, password)
+            .catch((error) => {
+              var newError = "Wrong password.";
+              errors = errors.concat(newError);
+              this.setState({errors: errors});
+            });
         });
     }
 
