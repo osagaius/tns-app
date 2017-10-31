@@ -10,7 +10,16 @@ const config = {
 
 import { LinearGradient } from "expo";
 
-export default class App extends Component {
+import { StackNavigator, NavigationActions } from 'react-navigation';
+
+const resetAction = NavigationActions.reset({
+  index: 0,
+  actions: [
+    NavigationActions.navigate({ routeName: 'Home'})
+  ]
+})
+
+export class LoginScreen extends Component {
   state = {
     email: "",
     password: "",
@@ -23,6 +32,7 @@ export default class App extends Component {
     Firebase.auth().onAuthStateChanged(user => {
       if (user) {
         this.setState({authenticated: true})
+        this.props.navigation.dispatch(resetAction);
       } else {
         this.setState({authenticated: false})
       }
@@ -123,3 +133,26 @@ const styles = StyleSheet.create({
     color: 'red',
   },
 });
+
+const HomeScreen = () => (
+  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <Text>Home Screen</Text>
+  </View>
+);
+
+const RootNavigator = StackNavigator({
+  Login: {
+    screen: LoginScreen,
+    navigationOptions: {
+      headerTitle: 'Sign In',
+    },
+  },
+  Home: {
+    screen: HomeScreen,
+    navigationOptions: {
+      headerTitle: 'Home',
+    },
+  }
+});
+
+export default RootNavigator;
