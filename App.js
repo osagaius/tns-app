@@ -1,5 +1,13 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, TextInput, Alert, Image, Button } from 'react-native';
+import Firebase from 'firebase';
+
+const config = {
+    apiKey: "AIzaSyBtvhszPNtcL-o8qa9vNUIY8FCLuN_FyUI",
+    authDomain: "tns-app.firebaseapp.com",
+    databaseURL: "https://tns-app.firebaseio.com",
+};
+
 import { LinearGradient } from "expo";
 
 export default class App extends Component {
@@ -8,6 +16,18 @@ export default class App extends Component {
     password: "",
     errors:[]
   };
+
+  componentWillMount() {
+    Firebase.initializeApp(config);
+
+    Firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.setState({authenticated: true})
+      } else {
+        this.setState({authenticated: false})
+      }
+    });
+  }
 
   _handlePasswordChange = password => {
     this.setState({errors: []})
@@ -34,6 +54,13 @@ export default class App extends Component {
     if (password.length < 8) {
       var newError = "Password is too short";
       errors = errors.concat(newError);
+    }
+
+    if (errors.length < 1) {
+      Firebase.auth().signInWithEmailAndPassword(email, password)
+        .catch(() => {
+          Firebase.auth().createUserWithEmailAndPassword(email, password)
+        });
     }
 
     this.setState({errors: errors});
