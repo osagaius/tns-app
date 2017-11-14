@@ -1,5 +1,15 @@
 {
   "expo": {
-    "sdkVersion": "22.0.0"
+   "name": "TNS",
+   "icon": "./src/images/tns-logo.png",
+   "version": "1.0.0",
+   "slug": "tns-app",
+   "sdkVersion": "22.0.0",
+   "ios": {
+     "bundleIdentifier": "com.tns.tns"
+   },
+   "android": {
+     "package": "com.tns.tns"
+   }
   }
 }
